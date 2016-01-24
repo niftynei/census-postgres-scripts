@@ -30,6 +30,8 @@ These are the steps I follow when I want to start from scratch and load all ACS 
 ### Set up disk
 
 (From [this link](http://www.gabrielweinberg.com/blog/2011/05/raid0-ephemeral-storage-on-aws-ec2.html))
+A more robust script for this can be found [here](https://gist.github.com/joemiller/6049831).  Note that the linked script uses `ext3` instead of `xfs` as listed below.  
+
 
     sudo su -
     apt-get update
@@ -51,11 +53,11 @@ After this `df -h` should indicate that you have 1.7TB of disk available at `/de
 Installs PostgreSQL 9.1 and puts the data directory on the `/dev/md0` partition we just created above.
 
     sudo su -
-    apt-get install -y postgresql-9.1 postgresql-9.1-postgis
+    apt-get install -y postgresql-9.3 postgresql-9.3-postgis
     /etc/init.d/postgresql stop
     mkdir /mnt/postgresql
-    sed -i "s/data_directory = '\/var\/lib\/postgresql\/9.1\/main'/data_directory = '\/mnt\/postgresql\/9.1\/main'/" /etc/postgresql/9.1/main/postgresql.conf
-    mv /var/lib/postgresql/9.1 /mnt/postgresql/
+    sed -i "s/data_directory = '\/var\/lib\/postgresql\/9.3\/main'/data_directory = '\/mnt\/postgresql\/9.3\/main'/" /etc/postgresql/9.3/main/postgresql.conf
+    mv /var/lib/postgresql/9.3 /mnt/postgresql/
     chown -R postgres:postgres /mnt/postgresql
     /etc/init.d/postgresql start
     exit
@@ -72,7 +74,7 @@ Make login passwordless.
 
 After this you should be able to connect to your empty PostgreSQL database:
 
-    psql -h localhost -U census postgres
+    psql -h localhost -U census census
 
 ### Download Census Bureau ACS data
 
